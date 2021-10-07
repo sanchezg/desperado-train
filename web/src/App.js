@@ -183,6 +183,14 @@ const App = () => {
         </form>
 
         <button className="waveButton" onClick={wave}>Wave at Me</button>
+        {mining &&
+          <div>
+            <BallScaleRandom
+              color={'#123abc'}
+              loading={mining}
+            />
+          </div>
+        }
 
         {[...allWaves].reverse().map((wave, index) => {
           return (
