@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
+import DarkModeToggle from "react-dark-mode-toggle";
 import { BallScaleRandom } from 'react-pure-loaders';
 import { ethers } from "ethers";
 import './App.css';
 import abi from './utils/WavePortal.json'
 
+import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from './theme';
+import { GlobalStyles } from './global';
+
+
 const App = () => {
+  const [isDarkMode, setIsDarkMode] = useState(window.localStorage.getItem('isDarkMode'));
   const [currentAccount, setCurrentAccount] = useState("");
   const [waveMessage, setWaveMessage] = useState("");
   const [allWaves, setAllWaves] = useState([]);
@@ -12,7 +19,7 @@ const App = () => {
 
   const contractAddress = "0x98B71a6bd534feaAd17bb401FB85B93B00E1D547";
   const contractABI = abi.abi;
-  
+
   const checkIfWalletIsConnected = async () => {
     try {
       const { ethereum } = window;
@@ -130,13 +137,32 @@ const App = () => {
   * This runs our function when the page loads.
   */
   useEffect(() => {
+    console.log("isDarkMode: ", window.localStorage.getItem('isDarkMode'));
     checkIfWalletIsConnected();
   }, [])
   
   return (
     <div className="mainContainer">
 
+      <ThemeProvider theme={isDarkMode ? darkTheme: lightTheme}>
+        <>
+          <GlobalStyles />
+        </>
+      </ThemeProvider>
+
       <div className="dataContainer">
+        <DarkModeToggle
+          onChange={() => {
+            console.log("isDarkMode: ", isDarkMode);
+            setIsDarkMode(isDarkMode ? false: true);
+            console.log("isDarkMode: ", isDarkMode);
+            window.localStorage.setItem('isDarkMode', isDarkMode)
+            }
+          }
+          checked={isDarkMode}
+          size={80}
+        />
+
         <div className="header">
         💰Hey there!
         </div>
@@ -160,7 +186,7 @@ const App = () => {
 
         {[...allWaves].reverse().map((wave, index) => {
           return (
-            <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+            <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px", color:"#363537"}}>
               <div>Address: {wave.address}</div>
               <div>Time: {wave.timestamp.toString()}</div>
               <div>Message: {wave.message}</div>
