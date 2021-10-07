@@ -186,7 +186,7 @@ const App = () => {
         {mining &&
           <div>
             <BallScaleRandom
-              color={'#123abc'}
+              color={isDarkMode? '#f0f8ff': '#123abc'}
               loading={mining}
             />
           </div>
